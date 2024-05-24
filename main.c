@@ -3,13 +3,13 @@
 #include <locale.h>
 #define MAX_VERTICES 100
 
-// Структура для представления графа
+// РЎС‚СЂСѓРєС‚СѓСЂР° РґР»СЏ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РіСЂР°С„Р°
 typedef struct {
     int matrix[MAX_VERTICES][MAX_VERTICES];
     int numVertices;
 } Graph;
 
-// Инициализация графа
+// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РіСЂР°С„Р°
 void initGraph(Graph* graph, int numVertices) {
     graph->numVertices = numVertices;
     for (int i = 0; i < numVertices; i++) {
@@ -19,38 +19,35 @@ void initGraph(Graph* graph, int numVertices) {
     }
 }
 
-// Добавление ребра в граф
+// Р”РѕР±Р°РІР»РµРЅРёРµ СЂРµР±СЂР° РІ РіСЂР°С„
 void addEdge(Graph* graph, int src, int dest) {
     graph->matrix[src][dest] = 1;
     graph->matrix[dest][src] = 1;
 }
 
-// Удаление вершины из графа
+// РЈРґР°Р»РµРЅРёРµ РІРµСЂС€РёРЅС‹ РёР· РіСЂР°С„Р°
 void removeVertex(Graph* graph, int vertex) {
     if (vertex >= graph->numVertices) {
-        printf("Ошибка: Недопустимая вершина\n");
+        printf("РћС€РёР±РєР°: РќРµРґРѕРїСѓСЃС‚РёРјР°СЏ РІРµСЂС€РёРЅР°\n");
         exit(EXIT_FAILURE);
     }
 
-    // Сдвигаем все вершины после удаляемой вершины на одну позицию влево
     for (int i = vertex; i < graph->numVertices - 1; i++) {
         for (int j = 0; j < graph->numVertices; j++) {
             graph->matrix[j][i] = graph->matrix[j][i + 1];
         }
     }
 
-    // Сдвигаем все вершины после удаляемой вершины на одну позицию вверх
     for (int i = vertex; i < graph->numVertices - 1; i++) {
         for (int j = 0; j < graph->numVertices; j++) {
             graph->matrix[i][j] = graph->matrix[i + 1][j];
         }
     }
 
-    // Уменьшаем количество вершин в графе
     graph->numVertices--;
 }
 
-// Получение степени вершины
+// РџРѕР»СѓС‡РµРЅРёРµ СЃС‚РµРїРµРЅРё РІРµСЂС€РёРЅС‹
 int getDegree(Graph* graph, int vertex) {
     int degree = 0;
     for (int i = 0; i < graph->numVertices; i++) {
@@ -61,14 +58,12 @@ int getDegree(Graph* graph, int vertex) {
     return degree;
 }
 
-// Сортировка вершин по возрастанию степени
+// РЎРѕСЂС‚РёСЂРѕРІРєР° РІРµСЂС€РёРЅ РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ СЃС‚РµРїРµРЅРё
 void sortVerticesByDegreeAsc(Graph* graph, int* sortedVertices) {
-    // Инициализация массива отсортированных вершин
     for (int i = 0; i < graph->numVertices; i++) {
         sortedVertices[i] = i;
     }
 
-    // Сортировка массива отсортированных вершин по возрастанию степени
     for (int i = 0; i < graph->numVertices - 1; i++) {
         for (int j = 0; j < graph->numVertices - i - 1; j++) {
             if (getDegree(graph, sortedVertices[j]) > getDegree(graph, sortedVertices[j + 1])) {
@@ -82,32 +77,31 @@ void sortVerticesByDegreeAsc(Graph* graph, int* sortedVertices) {
 
 int main() {
     setlocale(LC_ALL, "rus");
-    printf("Введите количество ребер: ");
+    printf("Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЂРµР±РµСЂ: ");
     int n = 0;
     scanf("%d", &n);
     Graph graph;
     initGraph(&graph, n);
 
-    // Добавляем ребра в граф
     addEdge(&graph, 0, 2);
     for (int i = 1; i <= n; i++) {
         addEdge(&graph, i - 1, i);
     }
 
 
-    printf("Исходный граф:\n");
+    printf("РСЃС…РѕРґРЅС‹Р№ РіСЂР°С„:\n");
     for (int i = 0; i < graph.numVertices; i++) {
         for (int j = 0; j < graph.numVertices; j++) {
             printf("%d ", graph.matrix[i][j]);
         }
         printf("\n");
     }
-    printf("Какую вершину хотите удалить?\n ");
+    printf("РљР°РєСѓСЋ РІРµСЂС€РёРЅСѓ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ?\n ");
     int vertexToRemove = 0;
     scanf("%d", &vertexToRemove);
     removeVertex(&graph, vertexToRemove);
 
-    printf("\nГраф после удаления вершины %d:\n", vertexToRemove);
+    printf("\nР“СЂР°С„ РїРѕСЃР»Рµ СѓРґР°Р»РµРЅРёСЏ РІРµСЂС€РёРЅС‹ %d\n", vertexToRemove);
     for (int i = 0; i < graph.numVertices; i++) {
         for (int j = 0; j < graph.numVertices; j++) {
             printf("%d ", graph.matrix[i][j]);
@@ -115,11 +109,10 @@ int main() {
         printf("\n");
     }
 
-    // Получаем массив отсортированных вершин по возрастанию степени
     int sortedVertices[MAX_VERTICES];
     sortVerticesByDegreeAsc(&graph, sortedVertices);
 
-    printf("\nВершины, отсортированные по возрастанию степени:\n");
+    printf("\nР’РµСЂС€РёРЅС‹, РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹Рµ РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ СЃС‚РµРїРµРЅРё:\n");
     for (int i = 0; i < graph.numVertices; i++) {
         printf("%d ", sortedVertices[i]);
     }
